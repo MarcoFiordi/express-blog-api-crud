@@ -4,6 +4,8 @@ import posts from "../data/posts.js";
 function index(request, response){
     response.status(200).json(posts);
 }
+
+
 function show(request, response){
     const id = request.params.id;
     const realId = Number(id.trim());
@@ -63,10 +65,27 @@ function modify(request, response){
 }
 function destroy(request, response){
     const id = request.params.id;
+    const realId = Number(id.trim());
+
+    if (isNaN(realId)){
+        response.status(400).json({
+            error: 'parametro id non corretto'
+        });
+        return;
+    }
+
+    if (realId <= 0) {
+        response.status(400).json({
+            error: 'parametro id negativo o 0'
+        });
+        return;
+    }
     response.json({
         messaggio:`distruzione del post ${id}`
     })
 }
+
+
 export { index,
     store,
     update,
