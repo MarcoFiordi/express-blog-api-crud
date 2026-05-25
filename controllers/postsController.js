@@ -2,29 +2,29 @@ import posts from "../data/posts.js";
 
 
 function index(request, response){
-    response.json(posts);
+    response.status(200).json(posts);
 }
 function show(request, response){
     const id = request.params.id;
     const realId = Number(id.trim());
     if (isNaN(realId)){
-        response.status(404)
+        response.status(400)
             .json({
                 error: 'parametro id non corretto'
             });
         return;
     }
     if (realId <= 0){
-        response.status(404)
+        response.status(400)
             .json({
-                error: 'parametro id negativo o zero (CORREGGI)'
+                error: 'parametro id negativo o zero'
             });
         return;
 
     }
 
-    const postFound = posts.find(posts => {
-        return posts.id === realId
+    const postFound = posts.find(post => {
+        return post.id === realId
     });
 
     if (postFound === undefined){
@@ -36,9 +36,9 @@ function show(request, response){
         return;
     }
 
-    response.json({
+    response.status(200).json({
         error: null,
-        results: postFound
+        result: postFound
     });
 }
 
