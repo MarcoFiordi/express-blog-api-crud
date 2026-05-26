@@ -45,9 +45,15 @@ function show(request, response) {
 }
 
 function store(request, response) {
-    response.json({
-        messaggio: "richiesta di creazione"
-    })
+    const nuovoPost = request.body;
+    
+    console.log(nuovoPost);
+    
+
+    response.status(200).json({
+        messaggio: 'richiesta di creazione',
+        data: nuovoPost
+    });
 }
 
 function update(request, response) {
