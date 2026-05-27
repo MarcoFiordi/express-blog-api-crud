@@ -88,6 +88,15 @@ function store(request, response) {
         });
         return;
     }
+    if(
+        typeof nuovoPost.prep_time !== 'number' ||
+        nuovoPost.prep_time <= 0
+    ){
+        response.status(400).json({
+            error: 'il prep_time deve essere un numero maggiore di 0'
+        });
+        return;
+    }
     
     
     console.log(nuovoPost);
