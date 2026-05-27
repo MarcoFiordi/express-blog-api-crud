@@ -47,30 +47,30 @@ function show(request, response) {
 function store(request, response) {
     const nuovoPost = request.body;
 
-    if (!nuovoPost.title || 
-        typeof nuovoPost.title !== 'string' || 
+    if (!nuovoPost.title ||
+        typeof nuovoPost.title !== 'string' ||
         nuovoPost.title.trim() === ''
-    ){
+    ) {
         response.status(400).json({
             error: 'Inserisci il titolo'
         });
         return;
     }
 
-    if (!nuovoPost.content || 
+    if (!nuovoPost.content ||
         typeof nuovoPost.content !== 'string' ||
         nuovoPost.content.trim() === ''
-    ){
+    ) {
         response.status(400).json({
             error: 'Inserisci il contenuto'
         });
         return;
     }
 
-    if (!nuovoPost.image || 
+    if (!nuovoPost.image ||
         typeof nuovoPost.image !== 'string' ||
         nuovoPost.image.trim() === ''
-    ){
+    ) {
         response.status(400).json({
             error: "inserisci un'immagine"
         });
@@ -78,34 +78,57 @@ function store(request, response) {
     }
 
     if (!Array.isArray(nuovoPost.tags) ||
-    nuovoPost.tags.length === 0 ||
-    nuovoPost.tags.some(tag => {
-        return typeof tag !== 'string' || tag.trim() === ''
-    })
-    ){
+        nuovoPost.tags.length === 0 ||
+        nuovoPost.tags.some(tag => {
+            return typeof tag !== 'string' || tag.trim() === ''
+        })
+    ) {
         response.status(400).json({
             error: 'il tag deve essere un array di stringhe'
         });
         return;
     }
-    if(
+    if (
         typeof nuovoPost.prep_time !== 'number' ||
         nuovoPost.prep_time <= 0
-    ){
+    ) {
         response.status(400).json({
             error: 'il prep_time deve essere un numero maggiore di 0'
         });
         return;
     }
-    
-    
-    console.log(nuovoPost);
+
+    const newId = posts[posts.length - 1].id + 1;
+    const newSlug = nuovoPost.title
+        .trim()
+        .toLowerCase()
+        .replaceAll(' ', '-');
+
+
+    const postToCreate = {
+        id: newId,
+        title: nuovoPost.title.trim(),
+        content: nuovoPost.content.trim(),
+        image: nuovoPost.image.trim(),
+        tags: nuovoPost.tags,
+        slug: newSlug,
+        published: true,
+        prep_time: nuovoPost.prep_time,
+        created_at: new Date().toISOString()
+    };
+
+    posts.push(postToCreate);
+
+    console.log(posts);
+
+    response.status(201).json({
+        error: null,
+        message: 'Post creato correttamente',
+        data: postToCreate
+    });
     
 
-    response.status(200).json({
-        messaggio: 'richiesta di creazione',
-        data: nuovoPost
-    });
+    
 }
 
 function update(request, response) {
