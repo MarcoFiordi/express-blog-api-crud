@@ -46,6 +46,49 @@ function show(request, response) {
 
 function store(request, response) {
     const nuovoPost = request.body;
+
+    if (!nuovoPost.title || 
+        typeof nuovoPost.title !== 'string' || 
+        nuovoPost.title.trim() === ''
+    ){
+        response.status(400).json({
+            error: 'Inserisci il titolo'
+        });
+        return;
+    }
+
+    if (!nuovoPost.content || 
+        typeof nuovoPost.content !== 'string' ||
+        nuovoPost.content.trim() === ''
+    ){
+        response.status(400).json({
+            error: 'Inserisci il contenuto'
+        });
+        return;
+    }
+
+    if (!nuovoPost.image || 
+        typeof nuovoPost.image !== 'string' ||
+        nuovoPost.image.trim() === ''
+    ){
+        response.status(400).json({
+            error: "inserisci un'immagine"
+        });
+        return;
+    }
+
+    if (!Array.isArray(nuovoPost.tags) ||
+    nuovoPost.tags.length === 0 ||
+    nuovoPost.tags.some(tag => {
+        return typeof tag !== 'string' || tag.trim() === ''
+    })
+    ){
+        response.status(400).json({
+            error: 'il tag deve essere un array di stringhe'
+        });
+        return;
+    }
+    
     
     console.log(nuovoPost);
     
