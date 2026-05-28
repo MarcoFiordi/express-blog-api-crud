@@ -126,15 +126,104 @@ function store(request, response) {
         message: 'Post creato correttamente',
         data: postToCreate
     });
-    
 
-    
+
+
 }
 
 function update(request, response) {
     const id = request.params.id;
+    const realId = Number(id.trim());
+
+    if (isNaN(realId)) {
+        response.status(400).json({
+            error: 'parametro non corretto'
+        });
+        return;
+    }
+
+    if (realId <= 0) {
+        response.status(400).json({
+            error: 'parametro id negativo o uguale a 0'
+        });
+    }
+
+    const postIndex = posts.findIndex(post => {
+        return post.id === realId;
+    });
+
+    if (postIndex === -1) {
+        response.status(404).json({
+            error: 'post non trovato',
+            result: null
+        });
+        return
+    }
+
+    const updatePost = request.body;
+
+    console.log(updatePost);
+
+    if (
+        !updatePost.title ||
+        typeof updatePost.title !== 'string' ||
+        updatePost.title.trim() === ''
+    ) {
+        response.status(400).json({
+            error: 'Inserisci il titolo'
+        });
+        return;
+    }
+
+    if (
+        !updatePost.content ||
+        typeof updatePost.content !== 'string' ||
+        updatePost.content.trim() === ''
+    ) {
+        response.status(400).json({
+            error: 'Inserisci il contenuto'
+        });
+        return;
+    }
+
+    if (
+        !updatePost.image ||
+        typeof updatePost.image !== 'string' ||
+        updatePost.image.trim() === ''
+    ) {
+        response.status(400).json({
+            error: 'Inserisci l’immagine'
+        });
+        return;
+    }
+
+    if (
+        !Array.isArray(updatePost.tags) ||
+        updatePost.tags.length === 0 ||
+        updatePost.tags.some(tag => {
+            return typeof tag !== 'string' || tag.trim() === '';
+        })
+    ) {
+        response.status(400).json({
+            error: 'Inserisci almeno un tag valido'
+        });
+        return;
+    }
+
+    if (
+        typeof updatePost.prep_time !== 'number' ||
+        updatePost.prep_time <= 0
+    ) {
+        response.status(400).json({
+            error: 'Il prep_time deve essere un numero maggiore di 0'
+        });
+        return;
+    }
+
+
+
     response.json({
-        messaggio: `modifica del post ${id}`
+        messaggio: `modifica del post ${realId}`
     })
 }
 function modify(request, response) {
