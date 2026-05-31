@@ -146,6 +146,7 @@ function update(request, response) {
         response.status(400).json({
             error: 'parametro id negativo o uguale a 0'
         });
+        return;
     }
 
     const postIndex = posts.findIndex(post => {
@@ -220,11 +221,35 @@ function update(request, response) {
         return;
     }
 
+    const { title, content, image, tags, prep_time } = updatePost;
+
+    const newSlug = title
+        .trim()
+        .toLowerCase()
+        .replaceAll(' ', '-');
+
+    const postUpdated = {
+        ...posts[postIndex],
+        title: title.trim(),
+        content: content.trim(),
+        image: image.trim(),
+        tags,
+        slug: newSlug,
+        prep_time
+    };
+    posts.splice(postIndex, 1, postUpdated);
+
+    console.log(posts);
+    
+    
 
 
-    response.json({
-        messaggio: `modifica del post ${realId}`
-    })
+
+    response.status(200).json({
+        error: null,
+        message: `Post ${realId} modificato correttamente`,
+        data: postUpdated
+    });
 }
 function modify(request, response) {
     const id = request.params.id;
