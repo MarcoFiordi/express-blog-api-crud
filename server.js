@@ -9,9 +9,17 @@ app.use(express.json());
 
 app.use('/posts', postsRouter);
 
+
+
 app.use((request, response)=>{
     response.status(404).json({
         error:'endpoint non trovato'
+    });
+});
+
+app.use((error, request, response, next)=> {
+    response.status(500).json({
+        error: 'errore interno del server'
     });
 });
 
