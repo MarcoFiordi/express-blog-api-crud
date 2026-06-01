@@ -3,6 +3,7 @@ import postsRouter from './routers/posts.js'
 import notFound from './middlewares/notFound.js';
 import errorsHandler from './middlewares/errorsHandler.js';
 
+
 const app = express();
 const port = process.env.SERVER_PORT;
 

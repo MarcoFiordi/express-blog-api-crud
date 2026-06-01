@@ -7,40 +7,9 @@ function index(request, response) {
 
 
 function show(request, response) {
-    const id = request.params.id;
-    const realId = Number(id.trim());
-    if (isNaN(realId)) {
-        response.status(400)
-            .json({
-                error: 'parametro id non corretto'
-            });
-        return;
-    }
-    if (realId <= 0) {
-        response.status(400)
-            .json({
-                error: 'parametro id negativo o zero'
-            });
-        return;
-
-    }
-
-    const postFound = posts.find(post => {
-        return post.id === realId
-    });
-
-    if (postFound === undefined) {
-        response.status(404)
-            .json({
-                error: 'post non trovato',
-                result: null
-            });
-        return;
-    }
-
     response.status(200).json({
         error: null,
-        result: postFound
+        result: request.postFound
     });
 }
 
@@ -132,37 +101,11 @@ function store(request, response) {
 }
 
 function update(request, response) {
-    const id = request.params.id;
-    const realId = Number(id.trim());
+    
 
-    if (isNaN(realId)) {
-        response.status(400).json({
-            error: 'parametro non corretto'
-        });
-        return;
-    }
-
-    if (realId <= 0) {
-        response.status(400).json({
-            error: 'parametro id negativo o uguale a 0'
-        });
-        return;
-    }
-
-    const postIndex = posts.findIndex(post => {
-        return post.id === realId;
-    });
-
-    if (postIndex === -1) {
-        response.status(404).json({
-            error: 'post non trovato',
-            result: null
-        });
-        return
-    }
-
+    const realId = request.realId;
+    const postIndex = request.postIndex;
     const updatePost = request.body;
-
     console.log(updatePost);
 
     if (
@@ -240,8 +183,8 @@ function update(request, response) {
     posts.splice(postIndex, 1, postUpdated);
 
     console.log(posts);
-    
-    
+
+
 
 
 
@@ -259,44 +202,13 @@ function modify(request, response) {
 
 }
 function destroy(request, response) {
-    const id = request.params.id;
-    const realId = Number(id.trim());
-
-    if (isNaN(realId)) {
-        response.status(400).json({
-            error: 'parametro id non corretto'
-        });
-        return;
-    }
-
-    if (realId <= 0) {
-        response.status(400).json({
-            error: 'parametro id negativo o 0'
-        });
-        return;
-    }
-    const postIndex = posts.findIndex(post => {
-        return post.id === realId;
-    });
-
-    if (postIndex === -1) {
-        response.status(404).json({
-            error: 'post non trovato',
-            result: null
-        });
-        return;
-    }
+    const postIndex = request.postIndex;
 
     posts.splice(postIndex, 1);
 
     console.log(posts);
 
-
-
-
-    response.status(200).json({
-        messaggio: `distruzione del post ${realId}`
-    });
+    response.status(204).send();
 }
 
 
